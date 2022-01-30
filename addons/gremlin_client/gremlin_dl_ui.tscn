@@ -1,0 +1,115 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/gremlin_client/gremlin_dl_ui.gd" type="Script" id=1]
+
+[node name="Gremlin" type="VBoxContainer"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 400.0
+margin_bottom = 14.0
+text = "Gremlin Server Address:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_top = 18.0
+margin_right = 400.0
+margin_bottom = 66.0
+
+[node name="ServerEdit" type="TextEdit" parent="HBoxContainer"]
+margin_right = 280.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 280, 48 )
+rect_clip_content = true
+text = "http://localhost:4433/client/download"
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputLabel" type="Label" parent="."]
+margin_top = 70.0
+margin_right = 400.0
+margin_bottom = 84.0
+text = "GDScript Output Directory:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_top = 88.0
+margin_right = 400.0
+margin_bottom = 112.0
+
+[node name="OutputEdit" type="TextEdit" parent="HBoxContainer2"]
+margin_right = 250.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 250, 24 )
+text = "res://scripts"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputButton" type="Button" parent="HBoxContainer2"]
+margin_left = 254.0
+margin_right = 278.0
+margin_bottom = 24.0
+text = "..."
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="."]
+margin_top = 116.0
+margin_right = 400.0
+margin_bottom = 140.0
+
+[node name="DevMode" type="CheckBox" parent="HBoxContainer4"]
+margin_right = 24.0
+margin_bottom = 24.0
+
+[node name="DevModeLabel" type="Label" parent="HBoxContainer4"]
+margin_left = 28.0
+margin_top = 5.0
+margin_right = 189.0
+margin_bottom = 19.0
+text = "Do not delete .proto files"
+
+[node name="Control" type="Control" parent="."]
+margin_top = 144.0
+margin_right = 400.0
+margin_bottom = 144.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CompileButton" type="Button" parent="Control"]
+margin_top = 20.0
+margin_right = 280.0
+margin_bottom = 40.0
+text = "Download & Compile"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ServerDialog" type="AcceptDialog" parent="."]
+margin_top = 148.0
+margin_right = 280.0
+margin_bottom = 206.0
+dialog_text = "Somethin happened!"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+visible = true
+margin_top = 148.0
+margin_right = 400.0
+margin_bottom = 398.0
+rect_min_size = Vector2( 400, 250 )
+window_title = "Open a Directory"
+resizable = true
+mode = 2
+
+[connection signal="pressed" from="HBoxContainer2/OutputButton" to="." method="_on_OutputButton_pressed"]
+[connection signal="pressed" from="Control/CompileButton" to="." method="_on_CompileButton_pressed"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_FileDialog_dir_selected"]
