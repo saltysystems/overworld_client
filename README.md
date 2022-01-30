@@ -4,6 +4,8 @@
 This Godot plugin will allow your Godot applications to download and update the
 latest & greatest client bindings from your own Gremlin server.
 
+![Plugins](/gh-images/plugin.png)
+
 ## Usage
 
 1. Open your Godot project, or use an existing one.
