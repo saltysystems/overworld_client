@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/gremlin_client/gremlin_dl_ui.gd" type="Script" id=1]
+[ext_resource path="res://addons/saline_client/saline_dl_ui.gd" type="Script" id=1]
 
-[node name="Gremlin" type="VBoxContainer"]
+[node name="Saline" type="VBoxContainer"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -11,7 +11,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 margin_right = 400.0
 margin_bottom = 14.0
-text = "Gremlin Server Address:"
+text = "Saline Server Address:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
