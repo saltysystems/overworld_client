@@ -4,7 +4,7 @@
 This Godot plugin will allow your Godot applications to download and update the
 latest & greatest client bindings from your own Saline server.
 
-![Plugins](/gh-images/plugin.png)
+![Plugins](/gh-images/download-compile.png)
 
 ## Usage
 
@@ -12,6 +12,8 @@ latest & greatest client bindings from your own Saline server.
 2. Copy the `addons` directory from this repository to your project
 3. Click `Project`, then `Project Settings`.
 4. Choose the `Plugins` tab, and set the SalineClient plugin to `Active`
+
+![Enable](/gh-images/enable-plugin.png)
 
 At this point, the Saline client panel will appear in Godot. 
 
