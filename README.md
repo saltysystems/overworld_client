@@ -2,7 +2,7 @@
 
 ## About
 This Godot plugin will allow your Godot applications to download and update the
-latest & greatest client bindings from your own Saline server.
+latest & greatest client bindings from your own [Saline](https://github.com/saltysystems/saline) server.
 
 ![Plugins](/gh-images/download-compile.png)
 
