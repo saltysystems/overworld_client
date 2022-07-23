@@ -10,12 +10,12 @@ config_version=4
 
 [application]
 
-config/name="saline_client"
+config/name="overworld_client"
 config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/saline_client/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/overworld_client/plugin.cfg" )
 
 [physics]
 

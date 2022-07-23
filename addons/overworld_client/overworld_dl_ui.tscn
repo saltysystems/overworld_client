@@ -2,7 +2,7 @@
 
 [ext_resource path="res://addons/overworld_client/overworld_dl_ui.gd" type="Script" id=1]
 
-[node name="Saline" type="VBoxContainer"]
+[node name="Overworld" type="VBoxContainer"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -11,7 +11,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="."]
 margin_right = 400.0
 margin_bottom = 14.0
-text = "Saline Server Address:"
+text = "Overworld Server Address:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
