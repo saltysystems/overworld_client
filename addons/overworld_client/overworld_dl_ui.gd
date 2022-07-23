@@ -25,8 +25,8 @@ extends VBoxContainer
 
 var http_request
 
-var gdunzip = preload('res://addons/saline_client/vendor/gdunzip/gdunzip.gd').new()
-var godobuf_parser = preload('res://addons/saline_client/vendor/godobuf/parser.gd').new()
+var gdunzip = preload('res://addons/overworld_client/vendor/gdunzip/gdunzip.gd').new()
+var godobuf_parser = preload('res://addons/overworld_client/vendor/godobuf/parser.gd').new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -85,7 +85,7 @@ func compile_protos(directory: String, devmode: bool):
 	# Search a given directory for protobuf files
 	# compile them into GDScript and delete them
 	var protofiles = get_protofiles_in_dir(directory)
-	var godobuf_core = "res://addons/saline_client/vendor/godobuf/protobuf_core.gd"
+	var godobuf_core = "res://addons/overworld_client/vendor/godobuf/protobuf_core.gd"
 	for input_file in protofiles:
 		var output_dir = $HBoxContainer2/OutputEdit.text
 		var output_file = output_dir + "/" + output_name(input_file)

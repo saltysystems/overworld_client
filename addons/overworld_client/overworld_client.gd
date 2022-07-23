@@ -26,7 +26,7 @@ extends EditorPlugin
 var dock
 
 func _enter_tree():
-	dock = preload("res://addons/saline_client/saline_dl_ui.tscn").instance()
+	dock = preload("res://addons/overworld_client/overworld_dl_ui.tscn").instance()
 	add_control_to_dock(DOCK_SLOT_LEFT_BR, dock)
 
 
