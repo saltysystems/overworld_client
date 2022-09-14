@@ -1,7 +1,7 @@
 #
 # BSD 3-Clause License
 #
-# Copyright (c) 2018 - 2020, Oleg Malyavkin
+# Copyright (c) 2018 - 2022, Oleg Malyavkin
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-tool
+@tool
 extends Node
 
 class Document:
@@ -86,7 +86,7 @@ class Helper:
 		return TokenPosition.new(res_begin, res_end)
 	
 	static func error_string(file_name, col, row, error_text):
-		return file_name + ":" + String(col) + ":" + String(row) + ": error: " + error_text
+		return file_name + ":" + str(col) + ":" + str(row) + ": error: " + error_text
 
 class AnalyzeResult:
 	var classes : Array = []
@@ -242,7 +242,7 @@ class Analysis:
 			if match_result != null:
 				var capture
 				capture = match_result.get_string(0)
-				if capture.empty():
+				if capture.is_empty():
 					return null
 				_entrance = TokenEntrance.new(_id, match_result.get_start(0), capture.length() - 1 + match_result.get_start(0), capture)
 			return _entrance
@@ -268,7 +268,7 @@ class Analysis:
 		
 		func remove_entrance(index) -> void:
 			if index < _entrances.size():
-				_entrances.remove(index)
+				_entrances.remove_at(index)
 		
 		func get_index() -> int:
 			return _entrance_index
@@ -536,7 +536,7 @@ class Analysis:
 			else:
 				space_index = -1
 		for i in range(remove_indexes.size()):
-			tokens.remove(remove_indexes[i] - i)
+			tokens.remove_at(remove_indexes[i] - i)
 	
 	#Analysis rule
 	enum AR {
@@ -570,7 +570,7 @@ class Analysis:
 		var importance : bool
 	
 	var TEMPLATE_SYNTAX : Array = [
-		funcref(self, "desc_syntax"),
+		self.desc_syntax,
 		ASD.new(TOKEN_ID.SYNTAX),
 		ASD.new(TOKEN_ID.EUQAL),
 		ASD.new(TOKEN_ID.STRING, SP.MAYBE, AR.MUST_ONE, true),
@@ -578,7 +578,7 @@ class Analysis:
 	]
 	
 	var TEMPLATE_IMPORT : Array = [
-		funcref(self, "desc_import"),
+		self.desc_import,
 		ASD.new(TOKEN_ID.IMPORT, SP.MUST),
 		ASD.new(TOKEN_ID.IMPORT_QUALIFICATION, SP.MUST, AR.MAYBE, true),
 		ASD.new(TOKEN_ID.STRING, SP.MAYBE, AR.MUST_ONE, true),
@@ -586,14 +586,14 @@ class Analysis:
 	]
 	
 	var TEMPLATE_PACKAGE : Array = [
-		funcref(self, "desc_package"),
+		self.desc_package,
 		ASD.new(TOKEN_ID.PACKAGE, SP.MUST),
 		ASD.new([TOKEN_ID.IDENT, TOKEN_ID.FULL_IDENT], SP.MAYBE, AR.OR, true),
 		ASD.new(TOKEN_ID.SEMICOLON)
 	]
 	
 	var TEMPLATE_OPTION : Array = [
-		funcref(self, "desc_option"),
+		self.desc_option,
 		ASD.new(TOKEN_ID.OPTION, SP.MUST),
 		ASD.new([TOKEN_ID.IDENT, TOKEN_ID.FULL_IDENT], SP.MAYBE, AR.OR, true),
 		ASD.new(TOKEN_ID.EUQAL),
@@ -602,7 +602,7 @@ class Analysis:
 	]
 	
 	var TEMPLATE_FIELD : Array = [
-		funcref(self, "desc_field"),
+		self.desc_field,
 		ASD.new(TOKEN_ID.FIELD_QUALIFICATION, SP.MUST, AR.MAYBE, true),
 		ASD.new([TOKEN_ID.SIMPLE_DATA_TYPE, TOKEN_ID.IDENT, TOKEN_ID.FULL_IDENT], SP.MAYBE, AR.OR, true),
 		ASD.new(TOKEN_ID.IDENT, SP.MAYBE, AR.MUST_ONE, true),
@@ -619,7 +619,7 @@ class Analysis:
 	var TEMPLATE_FIELD_ONEOF : Array = TEMPLATE_FIELD
 	
 	var TEMPLATE_MAP_FIELD : Array = [
-		funcref(self, "desc_map_field"),
+		self.desc_map_field,
 		ASD.new(TOKEN_ID.MAP),
 		ASD.new(TOKEN_ID.BRACKET_ANGLE_LEFT),
 		ASD.new(TOKEN_ID.SIMPLE_DATA_TYPE, SP.MAYBE, AR.MUST_ONE, true),
@@ -640,7 +640,7 @@ class Analysis:
 	var TEMPLATE_MAP_FIELD_ONEOF : Array = TEMPLATE_MAP_FIELD
 	
 	var TEMPLATE_ENUM : Array = [
-		funcref(self, "desc_enum"),
+		self.desc_enum,
 		ASD.new(TOKEN_ID.ENUM, SP.MUST),
 		ASD.new(TOKEN_ID.IDENT, SP.MAYBE, AR.MUST_ONE, true),
 		ASD.new(TOKEN_ID.BRACKET_CURLY_LEFT),
@@ -657,26 +657,26 @@ class Analysis:
 	]
 	
 	var TEMPLATE_MESSAGE_HEAD : Array = [
-		funcref(self, "desc_message_head"),
+		self.desc_message_head,
 		ASD.new(TOKEN_ID.MESSAGE, SP.MUST),
 		ASD.new(TOKEN_ID.IDENT, SP.MAYBE, AR.MUST_ONE, true),
 		ASD.new(TOKEN_ID.BRACKET_CURLY_LEFT)
 	]
 	
 	var TEMPLATE_MESSAGE_TAIL : Array = [
-		funcref(self, "desc_message_tail"),
+		self.desc_message_tail,
 		ASD.new(TOKEN_ID.BRACKET_CURLY_RIGHT)
 	]
 	
 	var TEMPLATE_ONEOF_HEAD : Array = [
-		funcref(self, "desc_oneof_head"),
+		self.desc_oneof_head,
 		ASD.new(TOKEN_ID.ONEOF, SP.MUST),
 		ASD.new(TOKEN_ID.IDENT, SP.MAYBE, AR.MUST_ONE, true),
 		ASD.new(TOKEN_ID.BRACKET_CURLY_LEFT),
 	]
 	
 	var TEMPLATE_ONEOF_TAIL : Array = [
-		funcref(self, "desc_oneof_tail"),
+		self.desc_oneof_tail,
 		ASD.new(TOKEN_ID.BRACKET_CURLY_RIGHT)
 	]
 	
@@ -846,7 +846,7 @@ class Analysis:
 				any_end_group_index = i
 				i = any_group_index - 1
 		if template[0] != null:
-			var result : DescriptionResult = template[0].call_func(importance, settings)
+			var result : DescriptionResult = template[0].call(importance, settings)
 			if !result.success:
 				return TokenCompare.new(COMPARE_STATE.ERROR_VALUE, result.error, result.description)
 		return TokenCompare.new(COMPARE_STATE.DONE, j)
@@ -1075,7 +1075,7 @@ class Analysis:
 			return ASTEnumValue.new(name, value)
 	
 	class ASTField:
-		func _init(t, n : String, tn : String, p : int, q : int, o : int, ci : int):
+		func _init(t, n : String, tn : String, p : int, q : int, o : int, ci : int, mf : bool):
 			tag = t
 			name = n
 			type_name = tn
@@ -1083,6 +1083,7 @@ class Analysis:
 			qualificator = q
 			option = o
 			construction_index = ci
+			is_map_field = mf
 		
 		var tag
 		var name : String
@@ -1091,11 +1092,12 @@ class Analysis:
 		var qualificator : int
 		var option : int
 		var construction_index : int
+		var is_map_field : bool
 		var field_type : int = FIELD_TYPE.UNDEFINED
 		var type_class_id : int = -1
 		
 		func copy() -> ASTField:
-			var res : ASTField = ASTField.new(tag, name, type_name, parent_class_id, qualificator, option, construction_index)
+			var res : ASTField = ASTField.new(tag, name, type_name, parent_class_id, qualificator, option, construction_index, is_map_field)
 			res.field_type = field_type
 			res.type_class_id = type_class_id
 			return res
@@ -1265,7 +1267,7 @@ class Analysis:
 					result.description = "Using the 'required', 'optional' or 'repeated' qualificator is unacceptable in 'OneOf' field."
 					return result
 				group_table[group_table.size() - 1].field_indexes.append(field_table.size())
-		field_table.append(ASTField.new(tag, field_name, type_name, settings.parent_index, qualifcator, option, settings.construction_index))
+		field_table.append(ASTField.new(tag, field_name, type_name, settings.parent_index, qualifcator, option, settings.construction_index, false))
 		return result
 	
 	func desc_map_field(indexed_tokens : Array, settings : CompareSettings) -> DescriptionResult:
@@ -1305,10 +1307,10 @@ class Analysis:
 				group_table[group_table.size() - 1].field_indexes.append(field_table.size())
 				
 		class_table.append(ASTClass.new("map_type_" + field_name, CLASS_TYPE.MAP, settings.parent_index, settings.parent_name, "", settings.construction_index))
-		field_table.append(ASTField.new(tag, field_name, "map_type_" + field_name, settings.parent_index, qualifcator, option, settings.construction_index))
+		field_table.append(ASTField.new(tag, field_name, "map_type_" + field_name, settings.parent_index, qualifcator, option, settings.construction_index, false))
 		
-		field_table.append(ASTField.new(1, "key", key_type_name, class_table.size() - 1, FIELD_QUALIFICATOR.REQUIRED, option, settings.construction_index))
-		field_table.append(ASTField.new(2, "value", type_name, class_table.size() - 1, FIELD_QUALIFICATOR.REQUIRED, option, settings.construction_index))
+		field_table.append(ASTField.new(1, "key", key_type_name, class_table.size() - 1, FIELD_QUALIFICATOR.REQUIRED, option, settings.construction_index, true))
+		field_table.append(ASTField.new(2, "value", type_name, class_table.size() - 1, FIELD_QUALIFICATOR.REQUIRED, option, settings.construction_index, true))
 		
 		return result
 	
@@ -1403,7 +1405,7 @@ class Analysis:
 					var spos_main : Helper.StringPosition = Helper.str_pos(document.text, pos_main)
 					var spos_inner : Helper.StringPosition = Helper.str_pos(document.text, pos_inner)
 					var err_text : String = "Syntax error in construction '" + result.tokens[syntax.parse_token_index].text + "'. "
-					err_text += "Unacceptable use '" + result.tokens[syntax.error_token_index].text + "' at:" + String(spos_inner.str_num) + ":" + String(spos_inner.column)
+					err_text += "Unacceptable use '" + result.tokens[syntax.error_token_index].text + "' at:" + str(spos_inner.str_num) + ":" + str(spos_inner.column)
 					err_text += "\n" + syntax.error_description_text
 					printerr(Helper.error_string(document.name, spos_main.str_num, spos_main.column, err_text))
 				else:
@@ -1598,11 +1600,11 @@ class Semantic:
 						class_type = "Message"
 					elif class_table[v.table_index].type == Analysis.CLASS_TYPE.MAP:
 						class_type = "Map"
-					err_text = class_type + " name '" + class_table[v.table_index].name + "' is already defined at:" + String(assoc_err_pos.str_num) + ":" + String(assoc_err_pos.column)
+					err_text = class_type + " name '" + class_table[v.table_index].name + "' is already defined at:" + str(assoc_err_pos.str_num) + ":" + str(assoc_err_pos.column)
 				elif v.subject == CHECK_SUBJECT.FIELD_NAME:
-					err_text = "Field name '" + field_table[v.table_index].name + "' is already defined at:" + String(assoc_err_pos.str_num) + ":" + String(assoc_err_pos.column)
+					err_text = "Field name '" + field_table[v.table_index].name + "' is already defined at:" + str(assoc_err_pos.str_num) + ":" + str(assoc_err_pos.column)
 				elif v.subject == CHECK_SUBJECT.FIELD_TAG_NUMBER:
-					err_text = "Tag number '" + field_table[v.table_index].tag + "' is already defined at:" + String(assoc_err_pos.str_num) + ":" + String(assoc_err_pos.column)
+					err_text = "Tag number '" + field_table[v.table_index].tag + "' is already defined at:" + str(assoc_err_pos.str_num) + ":" + str(assoc_err_pos.column)
 				elif v.subject == CHECK_SUBJECT.FIELD_TYPE:
 					err_text = "Type '" + field_table[v.table_index].type_name + "' of the '" + field_table[v.table_index].name + "' field undefined"
 				else:
@@ -1720,7 +1722,7 @@ class Translator:
 		elif field.field_type == Analysis.FIELD_TYPE.STRING:
 			return "String"
 		elif field.field_type == Analysis.FIELD_TYPE.BYTES:
-			return "PoolByteArray"
+			return "PackedByteArray"
 		return ""
 	
 	func generate_field_constructor(field_index : int, nesting : int) -> String:
@@ -1731,7 +1733,7 @@ class Translator:
 		pbfield_text += "\"" + f.name + "\", "
 		pbfield_text += generate_field_type(f) + ", "
 		pbfield_text += generate_field_rule(f) + ", "
-		pbfield_text += String(f.tag) + ", "
+		pbfield_text += str(f.tag) + ", "
 		if f.option == Analysis.FIELD_OPTION.PACKED:
 			pbfield_text += "true"
 		elif f.option == Analysis.FIELD_OPTION.NOT_PACKED:
@@ -1742,15 +1744,17 @@ class Translator:
 			pbfield_text += ", " + default_dict_text() + "[" + generate_field_type(f) + "]"
 		pbfield_text += ")\n"
 		text += tabulate(pbfield_text, nesting)
+		if f.is_map_field:
+			text += tabulate(field_name + ".is_map_field = true\n", nesting)
 		text += tabulate("service = PBServiceField.new()\n", nesting)
 		text += tabulate("service.field = " + field_name + "\n", nesting)
 		if f.field_type == Analysis.FIELD_TYPE.MESSAGE:
 			if f.qualificator == Analysis.FIELD_QUALIFICATOR.REPEATED:
-				text += tabulate("service.func_ref = funcref(self, \"add" + field_name + "\")\n", nesting)
+				text += tabulate("service.func_ref = self.add" + field_name + "\n", nesting)
 			else:
-				text += tabulate("service.func_ref = funcref(self, \"new" + field_name + "\")\n", nesting)
+				text += tabulate("service.func_ref = self.new" + field_name + "\n", nesting)
 		elif f.field_type == Analysis.FIELD_TYPE.MAP:
-			text += tabulate("service.func_ref = funcref(self, \"add_empty" + field_name + "\")\n", nesting)
+			text += tabulate("service.func_ref = self.add_empty" + field_name + "\n", nesting)
 		text += tabulate("data[" + field_name + ".tag] = service\n", nesting)
 		
 		return text
@@ -1800,16 +1804,18 @@ class Translator:
 			nesting -= 1
 			text += tabulate("func clear_" + f.name + "() -> void:\n", nesting)
 			nesting += 1
-			text += tabulate("data[" + String(f.tag) + "].state = PB_SERVICE_STATE.UNFILLED\n", nesting)
-			text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]" + "\n", nesting)
-			nesting -= 1
+			text += tabulate("data[" + str(f.tag) + "].state = PB_SERVICE_STATE.UNFILLED\n", nesting)
 			if f.qualificator == Analysis.FIELD_QUALIFICATOR.REPEATED:
+				text += tabulate("_" + f.name + ".value = []\n", nesting)
+				nesting -= 1
 				text += tabulate("func add_" + f.name + "() -> " + the_class_name + ":\n", nesting)
 				nesting += 1
 				text += tabulate("var element = " + the_class_name + ".new()\n", nesting)
 				text += tabulate("_" + f.name + ".value.append(element)\n", nesting)
 				text += tabulate("return element\n", nesting)
 			else:
+				text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]\n", nesting)
+				nesting -= 1
 				text += tabulate("func new_" + f.name + "() -> " + the_class_name + ":\n", nesting)
 				nesting += 1
 				text += generate_group_clear(field_index, nesting)
@@ -1830,7 +1836,7 @@ class Translator:
 			text += tabulate("func clear_" + f.name + "():\n", nesting)
 			nesting += 1
 			text += tabulate("data[" + String(f.tag) + "].state = PB_SERVICE_STATE.UNFILLED\n", nesting)
-			text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]" + "\n", nesting)
+			text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]\n", nesting)
 			nesting -= 1
 			for i in range(field_table.size()):
 				if field_table[i].parent_class_id == f.type_class_id && field_table[i].name == "value":
@@ -1911,14 +1917,16 @@ class Translator:
 			nesting -= 1
 			text += tabulate("func clear_" + f.name + "() -> void:\n", nesting)
 			nesting += 1
-			text += tabulate("data[" + String(f.tag) + "].state = PB_SERVICE_STATE.UNFILLED\n", nesting)
-			text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]" + "\n", nesting)
-			nesting -= 1
+			text += tabulate("data[" + str(f.tag) + "].state = PB_SERVICE_STATE.UNFILLED\n", nesting)
 			if f.qualificator == Analysis.FIELD_QUALIFICATOR.REPEATED:
+				text += tabulate("_" + f.name + ".value = []\n", nesting)
+				nesting -= 1
 				text += tabulate("func add_" + f.name + "(value" + argument_type + ") -> void:\n", nesting)
 				nesting += 1
 				text += tabulate("_" + f.name + ".value.append(value)\n", nesting)
 			else:
+				text += tabulate("_" + f.name + ".value = " + default_dict_text() + "[" + generate_field_type(f) + "]\n", nesting)
+				nesting -= 1
 				text += tabulate("func set_" + f.name + "(value" + argument_type + ") -> void:\n", nesting)
 				nesting += 1
 				text += generate_group_clear(field_index, nesting)
@@ -1976,12 +1984,12 @@ class Translator:
 		text += tabulate("return PBPacker.message_to_string(data)\n", nesting)
 		text += tabulate("\n", nesting)
 		nesting -= 1
-		text += tabulate("func to_bytes() -> PoolByteArray:\n", nesting)
+		text += tabulate("func to_bytes() -> PackedByteArray:\n", nesting)
 		nesting += 1
 		text += tabulate("return PBPacker.pack_message(data)\n", nesting)
 		text += tabulate("\n", nesting)
 		nesting -= 1
-		text += tabulate("func from_bytes(bytes : PoolByteArray, offset : int = 0, limit : int = -1) -> int:\n", nesting)
+		text += tabulate("func from_bytes(bytes : PackedByteArray, offset : int = 0, limit : int = -1) -> int:\n", nesting)
 		nesting += 1
 		text += tabulate("var cur_limit = bytes.size()\n", nesting)
 		text += tabulate("if limit != -1:\n", nesting)
@@ -2024,7 +2032,6 @@ class Translator:
 		core_file.close()
 		var text : String = ""
 		var nesting : int = 0
-		text += "const PROTO_VERSION = " + String(proto_version) + "\n\n"
 		text += core_text + "\n\n\n"
 		text += "############### USER DATA BEGIN ################\n"
 		var cls_user : String = ""
