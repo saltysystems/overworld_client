@@ -82,6 +82,9 @@ func _on_compile_button_pressed():
 		show_dialog("Error", "You must select a directory for output!")
 		return
 	var http_path = $ServerAddress.text + "/client/manifest"
+	# Cancel any current request
+	print("Aborting in-flight requests and connecting to " + $ServerAddress.text + "...")
+	await $HttpRequest.cancel_request()
 	manifest = []
 	await download_manifest(http_path)
 	print("Finished manifest. Downloading items..")
