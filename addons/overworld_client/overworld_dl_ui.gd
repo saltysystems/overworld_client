@@ -43,7 +43,6 @@ func _on_http_request_request_completed(result, response_code, headers, body):
 				json.parse(body.get_string_from_utf8())
 				manifest = json.get_data()
 				print("Downloaded manifest: " + str(manifest))
-				download_items(manifest)
 		else:
 			print("[Error[] Couldn't download file. Response code: " + str(response_code))
 	else:
@@ -84,7 +83,11 @@ func _on_compile_button_pressed():
 		return
 	var http_path = $ServerAddress.text + "/client/manifest"
 	manifest = []
-	download_manifest(http_path)
+	await download_manifest(http_path)
+	print("Finished manifest. Downloading items..")
+	await download_items(manifest)
+	compile_protos($OContainer/OutputDir.text, $SaveProtos.is_pressed())
+	
 
 			
 ###############################################################################
@@ -115,10 +118,8 @@ func download_items(manifest):
 func download_manifest(address: String):
 	if manifest == []: 
 		# Download the manifest
-		var error = $HttpRequest.request(address)
-		if error != OK:
-			$HttpRequest.cancel_request()
-			show_dialog("Error", "Connection could not be established")
+		$HttpRequest.request(address)
+		await $HttpRequest.request_completed
 
 ###############################################################################
 ###  Compilation Functions                                                  ###
@@ -135,12 +136,14 @@ func compile_protos(directory: String, devmode: bool):
 		print("Output dir is " + outdir)
 		print("Input file is " + input_file)
 		print("Output file is " + output_file)
-		#godobuf_parser.work(output_dir + "/", input_file, output_file, godobuf_core)
+		print(godobuf_parser)
+		godobuf_parser.work(outdir + "/", input_file, output_file, godobuf_core)
 		# Delete the proto files unless we're in dev mode
 		if !devmode:
 			# delete the proto file
 			var dir = Directory.new()
-			dir.remove_at(outdir + "/" + input_file)
+			if dir.open(outdir) == OK:
+				dir.remove(outdir + "/" + input_file)
 	show_dialog("Success", "Successfully compiled library!")
 
 
