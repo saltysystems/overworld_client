@@ -6,6 +6,11 @@ latest & greatest client bindings from your own [Overworld](https://github.com/s
 
 ![Plugins](/gh-images/download-compile.png)
 
+## Godot 3.x vs Godot 4.x
+Going forward, with Godot 4 now entering Beta and beyond - the Overworld client will
+primarily support the 4.x series with 3.x relegated to a branch only receiving 
+maintenance updates. 
+
 ## Usage
 
 1. Open your Godot project, or use an existing one.
