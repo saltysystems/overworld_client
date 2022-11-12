@@ -170,3 +170,4 @@ func center_dialog(dialog: Node):
 func output_name(input_name: String) -> String:
 	var n = input_name.rsplit(".",false)
 	return n[0]+"_pb.gd"
+
