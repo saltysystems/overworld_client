@@ -51,8 +51,8 @@ func _on_http_request_request_completed(result, response_code, headers, body):
 			# Filename - a bit brittle. Check the content header from the webserver
 			var file= headers[0].split("=",false,2)[1]
 			var content = body
-			var outfile = File.new()
-			var error = outfile.open(outdir + "/" + file, File.WRITE)
+			var outfile = FileAccess.new()
+			var error = outfile.open(outdir + "/" + file, FileAccess.WRITE)
 			outfile.store_buffer(content)
 			outfile.close()
 		else:
@@ -71,8 +71,7 @@ func _on_file_dialog_dir_selected(dir):
 
 func _on_compile_button_pressed():
 	# Pre-flight checks
-	var dir = Directory.new()
-	if dir.open($OContainer/OutputDir.text) != OK:
+	if DirAccess.open($OContainer/OutputDir.text) == null:
 		show_dialog("Error", "Cannot write to output directory! Does it exist and have the correct permissions?")
 		return
 	elif !"http" in $ServerAddress.text: 
@@ -99,8 +98,8 @@ func _on_compile_button_pressed():
 
 func get_protofiles_in_dir(directory: String) -> Array:
 	var protos = []
-	var dir = Directory.new()
-	if dir.open(directory) == OK:
+	var dir = DirAccess.open(directory)
+	if dir:
 		dir.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = dir.get_next()
 		while file_name != "":
@@ -144,8 +143,8 @@ func compile_protos(directory: String, devmode: bool):
 		# Delete the proto files unless we're in dev mode
 		if !devmode:
 			# delete the proto file
-			var dir = Directory.new()
-			if dir.open(outdir) == OK:
+			var dir = DirAccess.open(outdir)
+			if dir:
 				dir.remove(outdir + "/" + input_file)
 	show_dialog("Success", "Successfully compiled library!")
 
