@@ -82,7 +82,7 @@ func _on_compile_button_pressed():
 	var http_path = $ServerAddress.text + "/client/manifest"
 	# Cancel any current request
 	print("Aborting in-flight requests and connecting to " + $ServerAddress.text + "...")
-	await $HttpRequest.cancel_request()
+	$HttpRequest.cancel_request()
 	manifest = []
 	await download_manifest(http_path)
 	print("Finished manifest. Downloading items..")
