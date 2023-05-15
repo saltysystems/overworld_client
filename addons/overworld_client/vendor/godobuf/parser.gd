@@ -49,7 +49,6 @@ class TokenPosition:
 	var end : int = 0
 
 class Helper:
-
 	class StringPosition:
 		func _init(s : int, c : int, l : int):
 			str_num = s
@@ -1177,9 +1176,8 @@ class Analysis:
 				public = true
 			offset += 1
 		var f_name : String = path_dir + get_text_from_token(indexed_tokens[offset].token)
-		var file : File = File.new()
-		var sha : String = file.get_sha256(f_name)
-		if file.file_exists(f_name):
+		var sha : String = FileAccess.get_sha256(f_name)
+		if FileAccess.file_exists(f_name):
 			for i in import_table:
 				if i.path == f_name:
 					result.success = false
@@ -1400,8 +1398,8 @@ class Analysis:
 				comment_space_processing(result.tokens)
 				var syntax : TranslationResult = analyze_tokens(result.tokens)
 				if !syntax.done:
-					var pos_main : Helper.TokenPosition = Helper.text_pos(result.tokens, syntax.parse_token_index)
-					var pos_inner : Helper.TokenPosition = Helper.text_pos(result.tokens, syntax.error_token_index)
+					var pos_main : TokenPosition = Helper.text_pos(result.tokens, syntax.parse_token_index)
+					var pos_inner : TokenPosition = Helper.text_pos(result.tokens, syntax.error_token_index)
 					var spos_main : Helper.StringPosition = Helper.str_pos(document.text, pos_main)
 					var spos_inner : Helper.StringPosition = Helper.str_pos(document.text, pos_inner)
 					var err_text : String = "Syntax error in construction '" + result.tokens[syntax.parse_token_index].text + "'. "
@@ -1905,7 +1903,9 @@ class Translator:
 			var return_type : String = ""
 			var argument_type : String = ""
 			if gd_type != "":
-				return_type = " -> " + gd_type
+				# Hack until https://github.com/godotengine/godot-proposals/issues/162 is fixed
+				#return_type = " -> " + gd_type
+				return_type = ""
 				argument_type = " : " + gd_type
 			text += generate_has_oneof(field_index, nesting)
 			if f.qualificator == Analysis.FIELD_QUALIFICATOR.REPEATED:
@@ -2017,19 +2017,19 @@ class Translator:
 		return text
 	
 	func translate(file_name : String, core_file_name : String) -> bool:
-		var file : File = File.new()
-		if file.open(file_name, File.WRITE) < 0:
+		var file = FileAccess.open(file_name, FileAccess.WRITE)
+		if file == null:
 			printerr("File: '", file_name, "' save error.")
 			return false
-		var core_file : File = File.new()
-		if !core_file.file_exists(core_file_name):
+		if !FileAccess.file_exists(core_file_name):
 			printerr("File: '", core_file_name, "' not found.")
 			return false
-		if core_file.open(core_file_name, File.READ) < 0:
+		var core_file = FileAccess.open(core_file_name, FileAccess.READ)
+		if core_file == null:
 			printerr("File: '", core_file_name, "' read error.")
 			return false
-		var core_text : String = core_file.get_as_text()
-		core_file.close()
+		var core_text = core_file.get_as_text()
+		core_file = null
 		var text : String = ""
 		var nesting : int = 0
 		text += core_text + "\n\n\n"
@@ -2048,8 +2048,8 @@ class Translator:
 		text += cls_user
 		text += "################ USER DATA END #################\n"
 		file.store_string(text)
-		file.close()
-		if !file.file_exists(file_name):
+		file = null
+		if !FileAccess.file_exists(file_name):
 			printerr("File: '", file_name, "' save error.")
 			return false
 		return true
@@ -2066,16 +2066,16 @@ class ImportFile:
 	var parent_index : int
 
 func parse_all(analyzes : Dictionary, imports : Array, path : String, full_name : String, parent_index : int) -> bool:
-	var file : File = File.new()
-	if !file.file_exists(full_name):
+	if !FileAccess.file_exists(full_name):
 		printerr(full_name, ": not found.")
 		return false
-	if file.open(full_name, File.READ) < 0:
+	var file = FileAccess.open(full_name, FileAccess.READ)
+	if file == null:
 		printerr(full_name, ": read error.")
 		return false
 	var doc : Document = Document.new(full_name, file.get_as_text())
 	var sha : String = file.get_sha256(full_name)
-	file.close()
+	file = null
 	if !analyzes.has(sha):
 		print(full_name, ": parsing.")
 		var analysis : Analysis = Analysis.new(path, doc)
